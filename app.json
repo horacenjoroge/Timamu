@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "name": "therapistsapp",
+    "slug": "therapistsapp",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
