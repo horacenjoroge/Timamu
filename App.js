@@ -5,6 +5,9 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LandingPage from "./screens/LandingPage";
 import Login from "./screens/Login";
 import Profile from "./screens/Profile";
+import Services from "./screens/Services";
+import TherapistProfile from "./screens/TherapistProfile";
+import Booking from "./screens/Booking"; // New Booking screen
 
 const Stack = createStackNavigator();
 
@@ -41,6 +44,36 @@ const App = () => {
         >
           {(props) => <Profile {...props} />}
         </Stack.Screen>
+
+        {/* Services Screen */}
+        <Stack.Screen
+          name="Services"
+          component={Services}
+          options={{
+            headerShown: true,
+            title: "Therapy Services",
+          }}
+        />
+
+        {/* Therapist Profile Screen */}
+        <Stack.Screen
+          name="TherapistProfile"
+          component={TherapistProfile}
+          options={{
+            headerShown: true,
+            title: "Therapist Details",
+          }}
+        />
+
+        {/* Booking Screen */}
+        <Stack.Screen
+          name="Booking"
+          component={Booking}
+          options={{
+            headerShown: true,
+            title: "Book a Session",
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

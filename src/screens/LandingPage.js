@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  ImageBackground,
 } from "react-native";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-const LandingPage = () => {
+const LandingPage = ({ navigation }) => {
   // Therapist Profiles
   const therapists = [
     {
@@ -52,17 +54,28 @@ const LandingPage = () => {
 
         {/* Hero Section */}
         <View style={styles.hero}>
-          <Image
-            source={require("../assets/images/hero-smile.jpg")}
-            style={styles.heroImage}
-          />
-          <Text style={styles.heroTitle}>You MATTER!</Text>
-          <Text style={styles.heroSubtitle}>
-            Your Journey to Better Mental Health Starts Here
-          </Text>
-          <TouchableOpacity style={styles.heroButton}>
-            <Text style={styles.heroButtonText}>Get Started</Text>
-          </TouchableOpacity>
+          <ImageBackground
+            source={require("../assets/images/hero-background.jpg")}
+            style={styles.heroBackground}
+          >
+            <Animated.View
+              entering={FadeIn.duration(500)}
+              exiting={FadeOut.duration(500)}
+            >
+              <Text style={styles.heroTitle}>You MATTER!</Text>
+              <Text style={styles.heroSubtitle}>
+                Your Journey to Better Mental Health Starts Here
+              </Text>
+            </Animated.View>
+            <TouchableOpacity
+              style={styles.heroButton}
+              onPress={() => navigation.navigate("Services")}
+              accessibilityLabel="Find a Therapist Button"
+              accessibilityHint="Navigates to the services screen"
+            >
+              <Text style={styles.heroButtonText}>Find a Therapist</Text>
+            </TouchableOpacity>
+          </ImageBackground>
         </View>
 
         {/* Services Section */}
@@ -71,7 +84,14 @@ const LandingPage = () => {
             What kind of mental health help are you looking for?
           </Text>
           <View style={styles.serviceCards}>
-            <View style={styles.card}>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() =>
+                navigation.navigate("Services", {
+                  filter: "Individual Therapy",
+                })
+              }
+            >
               <Image
                 source={require("../assets/images/adult-icon.png")}
                 style={styles.cardImage}
@@ -80,8 +100,13 @@ const LandingPage = () => {
               <Text style={styles.cardText}>
                 Personalised one-on-one sessions.
               </Text>
-            </View>
-            <View style={styles.card}>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() =>
+                navigation.navigate("Services", { filter: "Family Therapy" })
+              }
+            >
               <Image
                 source={require("../assets/images/family-icon.png")}
                 style={styles.cardImage}
@@ -90,8 +115,13 @@ const LandingPage = () => {
               <Text style={styles.cardText}>
                 Resolving family challenges together.
               </Text>
-            </View>
-            <View style={styles.card}>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() =>
+                navigation.navigate("Services", { filter: "Teen Therapy" })
+              }
+            >
               <Image
                 source={require("../assets/images/teen-icon.png")}
                 style={styles.cardImage}
@@ -100,7 +130,7 @@ const LandingPage = () => {
               <Text style={styles.cardText}>
                 Specialised care for teenagers.
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -123,30 +153,34 @@ const LandingPage = () => {
           ))}
         </View>
 
-        {/* Payment Options Section */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Insurance & Payment Options</Text>
-          <Text style={styles.sectionText}>
-            We accept major insurance providers and offer flexible payment
-            options including pay-as-you-go and subscription models.
-          </Text>
-        </View>
-
         {/* Therapists Section */}
         <View style={styles.therapists}>
-          <Text style={styles.sectionTitle}>
-            Meet Some of Our Licensed Therapists
-          </Text>
+          <View style={styles.therapistsHeader}>
+            <Text style={styles.sectionTitle}>
+              Meet Some of Our Licensed Therapists
+            </Text>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Services")}
+              accessibilityLabel="View All Therapists"
+            >
+              <Text style={styles.viewAllText}>View All</Text>
+            </TouchableOpacity>
+          </View>
           <FlatList
             data={therapists}
             horizontal
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <View style={styles.therapistCard}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("TherapistProfile", { therapist: item })
+                }
+                style={styles.therapistCard}
+              >
                 <Image source={item.image} style={styles.therapistImage} />
                 <Text style={styles.therapistName}>{item.name}</Text>
                 <Text style={styles.therapistTitle}>{item.title}</Text>
-              </View>
+              </TouchableOpacity>
             )}
           />
         </View>
@@ -164,36 +198,37 @@ const styles = StyleSheet.create({
     backgroundColor: "#F5F5F5",
   },
   hero: {
-    alignItems: "center",
-    backgroundColor: "#4A90E2",
-    padding: 20,
+    height: 300,
+    position: "relative",
   },
-  heroImage: {
-    width: "100%",
-    height: 200,
-    borderRadius: 10,
+  heroBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   heroTitle: {
     fontSize: 28,
     color: "#FFFFFF",
     fontWeight: "bold",
-    marginVertical: 10,
+    textAlign: "center",
+    marginBottom: 10,
   },
   heroSubtitle: {
     fontSize: 18,
     color: "#FFFFFF",
     textAlign: "center",
+    marginBottom: 20,
   },
   heroButton: {
     backgroundColor: "#50C878",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
-    marginTop: 15,
   },
   heroButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
+    fontWeight: "bold",
   },
   services: {
     padding: 20,
@@ -233,11 +268,6 @@ const styles = StyleSheet.create({
   section: {
     padding: 20,
   },
-  sectionText: {
-    fontSize: 16,
-    color: "#333333",
-    lineHeight: 22,
-  },
   testimonials: {
     padding: 20,
     backgroundColor: "#F9F9F9",
@@ -248,13 +278,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
   },
-  testimonialText: {
-    fontSize: 16,
-    color: "#333333",
-    textAlign: "center",
-  },
   therapists: {
     padding: 20,
+  },
+  therapistsHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  viewAllText: {
+    color: "#4A90E2",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   therapistCard: {
     alignItems: "center",
