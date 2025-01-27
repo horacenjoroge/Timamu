@@ -2,12 +2,15 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+
 import LandingPage from "./screens/LandingPage";
 import Login from "./screens/Login";
 import Profile from "./screens/Profile";
 import Services from "./screens/Services";
 import TherapistProfile from "./screens/TherapistProfile";
-import Booking from "./screens/Booking"; // New Booking screen
+import Booking from "./screens/Booking"; // Booking screen
+import EmergencyContact from "./screens/EmergencyContact"; // Emergency Contacts screen
+import Resources from "./screens/Resources"; // Resources screen
 
 const Stack = createStackNavigator();
 
@@ -73,6 +76,23 @@ const App = () => {
             headerShown: true,
             title: "Book a Session",
           }}
+        />
+
+        {/* Emergency Contact Screen */}
+        <Stack.Screen
+          name="EmergencyContacts"
+          component={EmergencyContact}
+          options={{
+            headerShown: true,
+            title: "Emergency Contacts",
+          }}
+        />
+
+        {/* Resouces Screen */}
+        <Stack.Screen
+          name="Resources"
+          component={ResourcesScreen}
+          options={{ headerShown: true, title: "Resources" }}
         />
       </Stack.Navigator>
     </NavigationContainer>
