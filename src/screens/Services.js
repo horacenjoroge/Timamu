@@ -10,6 +10,8 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const Services = ({ navigation }) => {
   const [searchText, setSearchText] = useState("");
@@ -74,164 +76,171 @@ const Services = ({ navigation }) => {
     });
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Hero Section */}
-      <View style={styles.hero}>
-        <Text style={styles.heroTitle}>Take the First Step</Text>
-        <Text style={styles.heroSubtitle}>
-          Your mental health journey starts here.
-        </Text>
-      </View>
+    <View style={styles.container}>
+      {/* Header */}
+      <Header />
 
-      {/* Filter and Sort Options */}
-      <View style={styles.filters}>
-        <Text style={styles.sectionTitle}>Filter and Sort</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {[
-            "All",
-            "Anxiety & Depression",
-            "Family Therapy",
-            "Teen Counselling",
-          ].map((category, index) => (
+      <ScrollView style={styles.container}>
+        {/* Hero Section */}
+        <View style={styles.hero}>
+          <Text style={styles.heroTitle}>Take the First Step</Text>
+          <Text style={styles.heroSubtitle}>
+            Your mental health journey starts here.
+          </Text>
+        </View>
+
+        {/* Filter and Sort Options */}
+        <View style={styles.filters}>
+          <Text style={styles.sectionTitle}>Filter and Sort</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {[
+              "All",
+              "Anxiety & Depression",
+              "Family Therapy",
+              "Teen Counselling",
+            ].map((category, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.filterButton,
+                  selectedCategory === category && styles.selectedFilter,
+                ]}
+                onPress={() =>
+                  setSelectedCategory(category === "All" ? "" : category)
+                }
+              >
+                <Text
+                  style={[
+                    styles.filterText,
+                    selectedCategory === category && styles.selectedFilterText,
+                  ]}
+                >
+                  {category}
+                </Text>
+              </TouchableOpacity>
+            ))}
             <TouchableOpacity
-              key={index}
-              style={[
-                styles.filterButton,
-                selectedCategory === category && styles.selectedFilter,
-              ]}
-              onPress={() =>
-                setSelectedCategory(category === "All" ? "" : category)
+              style={styles.filterButton}
+              onPress={
+                () => setPriceRange(priceRange ? null : [4000, 6000]) // Toggle price range filter
               }
             >
               <Text
                 style={[
                   styles.filterText,
-                  selectedCategory === category && styles.selectedFilterText,
+                  priceRange && styles.selectedFilterText,
                 ]}
               >
-                {category}
+                KES 4000–6000
               </Text>
             </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            style={styles.filterButton}
-            onPress={
-              () => setPriceRange(priceRange ? null : [4000, 6000]) // Toggle price range filter
-            }
-          >
-            <Text
+          </ScrollView>
+
+          <View style={styles.sortOptions}>
+            <TouchableOpacity
+              onPress={() => setSortOption("priceAsc")}
               style={[
-                styles.filterText,
-                priceRange && styles.selectedFilterText,
+                styles.sortButton,
+                sortOption === "priceAsc" && styles.selectedSort,
               ]}
             >
-              KES 4000–6000
-            </Text>
-          </TouchableOpacity>
-        </ScrollView>
-
-        <View style={styles.sortOptions}>
-          <TouchableOpacity
-            onPress={() => setSortOption("priceAsc")}
-            style={[
-              styles.sortButton,
-              sortOption === "priceAsc" && styles.selectedSort,
-            ]}
-          >
-            <Text>Sort by Price (Low-High)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setSortOption("priceDesc")}
-            style={[
-              styles.sortButton,
-              sortOption === "priceDesc" && styles.selectedSort,
-            ]}
-          >
-            <Text>Sort by Price (High-Low)</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setSortOption("rating")}
-            style={[
-              styles.sortButton,
-              sortOption === "rating" && styles.selectedSort,
-            ]}
-          >
-            <Text>Sort by Rating</Text>
-          </TouchableOpacity>
+              <Text>Sort by Price (Low-High)</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setSortOption("priceDesc")}
+              style={[
+                styles.sortButton,
+                sortOption === "priceDesc" && styles.selectedSort,
+              ]}
+            >
+              <Text>Sort by Price (High-Low)</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setSortOption("rating")}
+              style={[
+                styles.sortButton,
+                sortOption === "rating" && styles.selectedSort,
+              ]}
+            >
+              <Text>Sort by Rating</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      {/* Featured Therapists */}
-      <View style={styles.featured}>
-        <Text style={styles.sectionTitle}>Featured Therapists</Text>
-        <FlatList
-          data={therapists.slice(0, 2)} // Show only top 2 therapists
-          keyExtractor={(item) => item.id}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.featuredCard}
-              onPress={() =>
-                navigation.navigate("TherapistProfile", { therapist: item })
-              }
-            >
-              <Image source={item.image} style={styles.featuredImage} />
-              <Text style={styles.featuredName}>{item.name}</Text>
-              <Text style={styles.featuredSpecialisation}>
-                {item.specialisation}
-              </Text>
-              <Text style={styles.featuredPrice}>
-                KES {item.price.toLocaleString()}
-              </Text>
-              <Text style={styles.featuredAvailability}>
-                {item.availability}
-              </Text>
-            </TouchableOpacity>
+        {/* Featured Therapists */}
+        <View style={styles.featured}>
+          <Text style={styles.sectionTitle}>Featured Therapists</Text>
+          <FlatList
+            data={therapists.slice(0, 2)} // Show only top 2 therapists
+            keyExtractor={(item) => item.id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.featuredCard}
+                onPress={() =>
+                  navigation.navigate("TherapistProfile", { therapist: item })
+                }
+              >
+                <Image source={item.image} style={styles.featuredImage} />
+                <Text style={styles.featuredName}>{item.name}</Text>
+                <Text style={styles.featuredSpecialisation}>
+                  {item.specialisation}
+                </Text>
+                <Text style={styles.featuredPrice}>
+                  KES {item.price.toLocaleString()}
+                </Text>
+                <Text style={styles.featuredAvailability}>
+                  {item.availability}
+                </Text>
+              </TouchableOpacity>
+            )}
+          />
+        </View>
+
+        {/* Browse All Therapists */}
+        <View style={styles.browse}>
+          <Text style={styles.sectionTitle}>Browse All Therapists</Text>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search by name or specialisation..."
+            placeholderTextColor="#999"
+            onChangeText={(text) => setSearchText(text)}
+          />
+          {filteredTherapists.length === 0 ? (
+            <Text style={styles.noResultsText}>
+              No therapists found. Try different filters or search criteria.
+            </Text>
+          ) : (
+            filteredTherapists.map((therapist) => (
+              <TouchableOpacity
+                key={therapist.id}
+                style={styles.browseCard}
+                onPress={() =>
+                  navigation.navigate("TherapistProfile", { therapist })
+                }
+              >
+                <Image source={therapist.image} style={styles.browseImage} />
+                <View style={styles.browseContent}>
+                  <Text style={styles.browseName}>{therapist.name}</Text>
+                  <Text style={styles.browseSpecialisation}>
+                    {therapist.specialisation}
+                  </Text>
+                  <Text style={styles.browsePrice}>
+                    KES {therapist.price.toLocaleString()}
+                  </Text>
+                  <Text style={styles.browseAvailability}>
+                    {therapist.availability}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))
           )}
-        />
-      </View>
-
-      {/* Browse All Therapists */}
-      <View style={styles.browse}>
-        <Text style={styles.sectionTitle}>Browse All Therapists</Text>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search by name or specialisation..."
-          placeholderTextColor="#999"
-          onChangeText={(text) => setSearchText(text)}
-        />
-        {filteredTherapists.length === 0 ? (
-          <Text style={styles.noResultsText}>
-            No therapists found. Try different filters or search criteria.
-          </Text>
-        ) : (
-          filteredTherapists.map((therapist) => (
-            <TouchableOpacity
-              key={therapist.id}
-              style={styles.browseCard}
-              onPress={() =>
-                navigation.navigate("TherapistProfile", { therapist })
-              }
-            >
-              <Image source={therapist.image} style={styles.browseImage} />
-              <View style={styles.browseContent}>
-                <Text style={styles.browseName}>{therapist.name}</Text>
-                <Text style={styles.browseSpecialisation}>
-                  {therapist.specialisation}
-                </Text>
-                <Text style={styles.browsePrice}>
-                  KES {therapist.price.toLocaleString()}
-                </Text>
-                <Text style={styles.browseAvailability}>
-                  {therapist.availability}
-                </Text>
-              </View>
-            </TouchableOpacity>
-          ))
-        )}
-      </View>
-    </ScrollView>
+        </View>
+      </ScrollView>
+      {/* Footer */}
+      <Footer />
+    </View>
   );
 };
 
